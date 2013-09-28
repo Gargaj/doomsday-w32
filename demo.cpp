@@ -52,28 +52,40 @@ void midi_tracks(float t)
 	if(*midi_tech04!=-1)
 	{
 		while(*midi_tech04!=-1 && *midi_tech04/960.f<=t) midi_tech04+=3;
-		tech04_keytime[midi_tech04[-2]]=midi_tech04[-3]/960.f;
-		tech04_keyvelocity[midi_tech04[-2]]=midi_tech04[-1]/127.f;
+    if (midi_tech04 != track_tech04)
+    {
+		  tech04_keytime[midi_tech04[-2]]=midi_tech04[-3]/960.f;
+		  tech04_keyvelocity[midi_tech04[-2]]=midi_tech04[-1]/127.f;
+    }
 	}
 	if(*midi_track16!=-1)
 	{
 		while(*midi_track16!=-1 && *midi_track16/960.f<=t) midi_track16+=3;
-		track16_keytime[midi_tech04[-2]]=midi_track16[-3]/960.f;
-		track16_keyvelocity[midi_tech04[-2]]=midi_track16[-1]/127.f;
+    if (midi_track16 != track_tech16)
+    {
+		  track16_keytime[midi_tech04[-2]]=midi_track16[-3]/960.f;
+		  track16_keyvelocity[midi_tech04[-2]]=midi_track16[-1]/127.f;
+    }
 	}
 	
 	if(*midi_track17!=-1)
 	{
 		while(*midi_track17!=-1 && *midi_track17/960.f<=t) midi_track17+=3;
-		track17_keytime[midi_track17[-2]]=midi_track17[-3]/960.f;
-		track17_keyvelocity[midi_track17[-2]]=midi_track17[-1]/127.f;
+    if (midi_track17 != track_tech17)
+    {
+		  track17_keytime[midi_track17[-2]]=midi_track17[-3]/960.f;
+		  track17_keyvelocity[midi_track17[-2]]=midi_track17[-1]/127.f;
+    }
 	}
 
 	if(*midi_track19!=-1)
 	{
 		while(*midi_track19!=-1 && *midi_track19/960.f<=t) midi_track19+=3;
-		track19_keytime[midi_track17[-2]]=midi_track19[-3]/960.f;
-		track19_keyvelocity[midi_track17[-2]]=midi_track19[-1]/127.f;
+    if (midi_track17 != track_tech17 && midi_track19 != track_tech19)
+    {
+      track19_keytime[midi_track17[-2]]=midi_track19[-3]/960.f;
+      track19_keyvelocity[midi_track17[-2]]=midi_track19[-1]/127.f;
+    }
 	}
 }
 
