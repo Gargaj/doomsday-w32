@@ -96,6 +96,7 @@ void ifs_deinit()
 
 
 
+#if 0
 void render_bg(LPDIRECT3DDEVICE9 pd3dDevice, LPDIRECT3DTEXTURE9 bg)
 {
     // Render the secondary color surface to the screen
@@ -143,6 +144,7 @@ void render_bg(LPDIRECT3DDEVICE9 pd3dDevice, LPDIRECT3DTEXTURE9 bg)
 
     pd3dDevice->SetRenderState( D3DRS_ALPHABLENDENABLE, FALSE);
 }
+#endif // 0
 
 
 
@@ -241,7 +243,7 @@ void ifs_render(float t)
 
 	g_pd3dDevice->SetTexture(0, m_pParticleTexture );
 
-	int alpha=(int)(255*fade);
+	int alpha=(int)(32*fade);
 	m_pd3dDevice->SetRenderState( D3DRS_TEXTUREFACTOR, 0x01010101*(alpha));
 
 	m_pd3dDevice->SetTextureStageState( 0, D3DTSS_TEXCOORDINDEX, 0);
