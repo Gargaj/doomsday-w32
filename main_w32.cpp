@@ -1,4 +1,7 @@
 #include "plattis.h"
+#include "bass.h"
+
+#pragma comment(lib,"bass.lib")
 
 float angles[256];
 unsigned int closing = 0;
@@ -144,7 +147,7 @@ int WINAPI WinMain( __in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, 
     unsigned int t = GetTickCount() - dwStartTime;
 
     g_pd3dDevice->Clear( 0L, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER|D3DCLEAR_STENCIL, 0xff000000, 1.0f, 0L );
-    demo_render(t);
+    demo_render( t / 1000.0 );
     g_pd3dDevice->Present( NULL, NULL, NULL, NULL );
   }
 }
