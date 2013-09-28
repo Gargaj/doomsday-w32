@@ -53,10 +53,11 @@ LPDIRECT3DTEXTURE9      tex_rip= NULL;
 struct CUSTOMVERTEX
 {
 	FLOAT x, y, z;
-    D3DCOLOR    color;    // The color
+  FLOAT nx, ny, nz;
 	FLOAT u, v;
 };
-#define CUSTOMVERTEX_FVF (D3DFVF_XYZ|D3DFVF_DIFFUSE|D3DFVF_TEX1)
+#define CUSTOMVERTEX_FVF D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_NORMAL
+//(D3DFVF_XYZ|D3DFVF_DIFFUSE|D3DFVF_TEX1)
 
 // #include "xbmesh.h"
 // 
@@ -101,6 +102,40 @@ void mosaic_init()
 	delete p;
 	//WRAP(cube.Create("media\\noppa-96faces-ok.xbg"));
   D3DXCreateBox( g_pd3dDevice, 2, 2, 2, &cube, NULL );
+
+  LPD3DXMESH _meshPtr = NULL;
+  cube->CloneMeshFVF(0, D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_NORMAL, g_pd3dDevice, &_meshPtr);
+  cube->Release();
+  cube = _meshPtr;
+
+  D3DXComputeNormals(cube, 0); 
+
+  LPDIRECT3DVERTEXBUFFER9 tempBuffer;
+  if ( SUCCEEDED( _meshPtr->GetVertexBuffer( &tempBuffer ) ) )
+  {
+    int numVerts = _meshPtr->GetNumVertices();
+
+    struct MYVERTEX { float x, y, z, nx, ny, nz, tu, tv; };
+    MYVERTEX* verts = NULL;
+    tempBuffer->Lock(0, 0, (void**)&verts, 0);
+
+    // Generate texture coordinates for the box
+    for ( int i = 0; i < numVerts; ++i )
+    {
+      float pu = 0;
+      float pv = 0;
+      if (verts->nx != 0) { pu = verts->y * verts->nx; pv = verts->z * verts->nx; }
+      if (verts->ny != 0) { pu = verts->x * verts->ny; pv = verts->z * verts->ny; }
+      if (verts->nz != 0) { pu = verts->x * verts->nz; pv = verts->y * verts->nz; }
+      
+      verts->tu = (pu + 1) / 2.0;
+      verts->tv = (pv + 1) / 2.0;
+      verts++;
+    }
+
+    tempBuffer->Unlock();
+    tempBuffer->Release();
+  } 
 }
 
 void mosaic_deinit()
