@@ -5,11 +5,11 @@
 
 #define ENABLE_POSTPROCESSING
 
-LPDIRECT3DTEXTURE9       m_pSecondaryTexture;
-LPDIRECT3DSURFACE9       m_pSecondaryColorSurface;
-LPDIRECT3DSURFACE9       m_pSecondaryDepthSurface;
-VOID*                    m_pColorBufferMemory; 
-VOID*                    m_pDepthBufferMemory;
+LPDIRECT3DTEXTURE9       m_pSecondaryTexture = NULL;
+LPDIRECT3DSURFACE9       m_pSecondaryColorSurface = NULL;
+LPDIRECT3DSURFACE9       m_pSecondaryDepthSurface = NULL;
+VOID*                    m_pColorBufferMemory = NULL; 
+VOID*                    m_pDepthBufferMemory = NULL;
 
 float fade=1;
 
@@ -156,9 +156,12 @@ HRESULT CreateSecondaryRenderTarget( unsigned int dwWidth, unsigned int dwHeight
 
 HRESULT DestroySecondaryRenderTarget()
 {
-  m_pSecondaryDepthSurface->Release();
-  m_pSecondaryColorSurface->Release();
-  m_pSecondaryTexture->Release();
+  if (m_pSecondaryDepthSurface)
+    m_pSecondaryDepthSurface->Release();
+  if (m_pSecondaryColorSurface)
+    m_pSecondaryColorSurface->Release();
+  if (m_pSecondaryTexture)
+    m_pSecondaryTexture->Release();
 
   return S_OK;
 }

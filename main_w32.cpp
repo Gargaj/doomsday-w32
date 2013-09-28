@@ -170,8 +170,8 @@ int WINAPI WinMain( __in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, 
   setup.scrBPP = 32;
 #ifdef _DEBUG
   setup.nWindowed = 1;
-  setup.scrWidth  = 800;
-  setup.scrHeight = 600;
+  setup.scrWidth  = 640;
+  setup.scrHeight = 480;
 #else
   setup.scrWidth  = 1024;
   setup.scrHeight = 768;
