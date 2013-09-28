@@ -1,7 +1,10 @@
 #include "plattis.h"
-#include "bass.h"
 
+#include "bass.h"
 #pragma comment(lib,"bass.lib")
+
+#include "basswma.h"
+#pragma comment(lib,"basswma.lib")
 
 float angles[256];
 unsigned int closing = 0;
@@ -132,9 +135,16 @@ HRESULT InitD3D( unsigned int xres, unsigned int yres, bool fullscreen )
 int WINAPI WinMain( __in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, __in LPSTR lpCmdLine, __in int nShowCmd )
 {
   InitD3D( 640, 480, false );
+
+  BASS_Init(-1,44100,NULL,hwnd,NULL);
+  HSTREAM hStream = BASS_WMA_StreamCreateFile(FALSE,"media\\demo.wma",0,0,0);
+
   demo_init();
 
-  unsigned int dwStartTime = GetTickCount();
+  float fStartSec = 0.0;
+  BASS_Start();
+  BASS_ChannelSetPosition( hStream, BASS_ChannelSeconds2Bytes(hStream,fStartSec), BASS_POS_BYTE);
+  BASS_ChannelPlay( hStream, FALSE );
   while( !closing )
   {
     MSG msg;        
@@ -144,10 +154,10 @@ int WINAPI WinMain( __in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, 
       DispatchMessage(&msg); 
     }
 
-    unsigned int t = GetTickCount() - dwStartTime;
-
+    float t = BASS_ChannelBytes2Seconds( hStream, BASS_ChannelGetPosition( hStream, BASS_POS_BYTE ) );
+    
     g_pd3dDevice->Clear( 0L, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER|D3DCLEAR_STENCIL, 0xff000000, 1.0f, 0L );
-    demo_render( t / 1000.0 );
+    demo_render( t );
     g_pd3dDevice->Present( NULL, NULL, NULL, NULL );
   }
 }
