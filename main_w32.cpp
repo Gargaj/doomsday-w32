@@ -115,6 +115,9 @@ HRESULT InitD3D( unsigned int xres, unsigned int yres, bool fullscreen )
     }
   }
 
+  g_pd3dDevice->GetRenderTarget(0,&main_back);
+  g_pd3dDevice->GetDepthStencilSurface(&main_depth);
+
   g_pd3dDevice->Clear( 0L, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER|D3DCLEAR_STENCIL, 0xff000000, 1.0f, 0L );
   g_pd3dDevice->Present( NULL, NULL, NULL, NULL );
   g_pd3dDevice->Clear( 0L, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER|D3DCLEAR_STENCIL, 0xff000000, 1.0f, 0L );

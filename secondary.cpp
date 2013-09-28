@@ -3,6 +3,8 @@
 
 #define m_pd3dDevice g_pd3dDevice
 
+//#define ENABLE_POSTPROCESSING
+
 LPDIRECT3DTEXTURE9       m_pSecondaryTexture;
 LPDIRECT3DSURFACE9       m_pSecondaryColorSurface;
 LPDIRECT3DSURFACE9       m_pSecondaryDepthSurface;
@@ -120,12 +122,17 @@ void BlurSecondary()
 //-----------------------------------------------------------------------------
 HRESULT CreateSecondaryRenderTarget()
 {
+#ifndef ENABLE_POSTPROCESSING
   return S_OK;
-
+#endif
 	DWORD dwWidth  = 640;
 	DWORD dwHeight = 480;
 
-  DebugBreak(); // TODO - rewrite this into PC
+  g_pd3dDevice->CreateTexture( dwWidth, dwHeight, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &m_pSecondaryTexture, NULL);
+  m_pSecondaryTexture->GetSurfaceLevel(0,&m_pSecondaryColorSurface);
+  g_pd3dDevice->CreateDepthStencilSurface( dwWidth, dwHeight, D3DFMT_D24S8, D3DMULTISAMPLE_NONE, 0, FALSE, &m_pSecondaryDepthSurface, NULL);
+
+
 /*
 	// Create a new 32-bit color surface using allocated tile-able memory
 	m_pSecondaryTexture = new D3DTexture;
@@ -175,7 +182,9 @@ HRESULT SetShader( LPDIRECT3DDEVICE9 pd3dDevice )
 
 void SetSecondaryRenderTarget()
 {
+#ifndef ENABLE_POSTPROCESSING
   return;
+#endif
 	m_pd3dDevice->SetRenderTarget( 0, m_pSecondaryColorSurface );
   m_pd3dDevice->SetDepthStencilSurface( m_pSecondaryDepthSurface );
 }
@@ -189,7 +198,10 @@ void SecondaryBlend(int a)
 // to render the texture to the primary backbuffer.
 void RenderSecondary(LPDIRECT3DSURFACE9 m_pBackBuffer, LPDIRECT3DSURFACE9 m_pDepthBuffer, int blend)
 {
+#ifndef ENABLE_POSTPROCESSING
   return;
+#endif
+  m_pd3dDevice->BeginScene();
 	// Set the render target back to be the app's main backbuffer
   m_pd3dDevice->SetRenderTarget( 0, m_pBackBuffer );
   m_pd3dDevice->SetDepthStencilSurface( m_pDepthBuffer );
@@ -250,4 +262,5 @@ void RenderSecondary(LPDIRECT3DSURFACE9 m_pBackBuffer, LPDIRECT3DSURFACE9 m_pDep
 
 	m_pd3dDevice->SetPixelShader(NULL);
 	m_pd3dDevice->SetRenderState( D3DRS_ALPHABLENDENABLE, FALSE);
+  m_pd3dDevice->EndScene();
 }
