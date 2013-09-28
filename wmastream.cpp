@@ -11,7 +11,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
 #include <assert.h>
-#include <xtl.h>
+//#include <xtl.h>
 #include "WMAStream.h"
 
 

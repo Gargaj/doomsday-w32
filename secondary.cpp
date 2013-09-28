@@ -3,9 +3,9 @@
 
 #define m_pd3dDevice g_pd3dDevice
 
-LPDIRECT3DTEXTURE8       m_pSecondaryTexture;
-LPDIRECT3DSURFACE8       m_pSecondaryColorSurface;
-LPDIRECT3DSURFACE8       m_pSecondaryDepthSurface;
+LPDIRECT3DTEXTURE9       m_pSecondaryTexture;
+LPDIRECT3DSURFACE9       m_pSecondaryColorSurface;
+LPDIRECT3DSURFACE9       m_pSecondaryDepthSurface;
 VOID*                    m_pColorBufferMemory; 
 VOID*                    m_pDepthBufferMemory;
 
@@ -100,7 +100,9 @@ static void radialblur_zoom(DWORD dest[], double factor, double centerx, double 
 
 void BlurSecondary()
 {
+#ifdef _XBOX   // ?
 	g_pd3dDevice->BlockUntilIdle();
+#endif
 
 	DWORD *p=(DWORD*)m_pColorBufferMemory;
 	for(int i=0;i<640*480;i++)
@@ -121,6 +123,8 @@ HRESULT CreateSecondaryRenderTarget()
 	DWORD dwWidth  = 640;
 	DWORD dwHeight = 480;
 
+  DebugBreak(); // TODO - rewrite this into PC
+/*
 	// Create a new 32-bit color surface using allocated tile-able memory
 	m_pSecondaryTexture = new D3DTexture;
 	//    XGSetTextureHeader( dwWidth, dwHeight, 1, 0, D3DFMT_LIN_A8R8G8B8, 0, m_pSecondaryTexture, 0, 0 );
@@ -137,11 +141,12 @@ HRESULT CreateSecondaryRenderTarget()
 		D3DTILE_ALIGNMENT );
 	m_pSecondaryDepthSurface->Register( m_pDepthBufferMemory );
 
+*/
 	return S_OK;
 }
 
 
-HRESULT SetShader( LPDIRECT3DDEVICE8 pd3dDevice )
+HRESULT SetShader( LPDIRECT3DDEVICE9 pd3dDevice )
 {
 	pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
 	pd3dDevice->SetTextureStageState( 0, D3DTSS_COLOROP,   D3DTOP_SELECTARG1 );
@@ -168,7 +173,8 @@ HRESULT SetShader( LPDIRECT3DDEVICE8 pd3dDevice )
 
 void SetSecondaryRenderTarget()
 {
-	m_pd3dDevice->SetRenderTarget( m_pSecondaryColorSurface, m_pSecondaryDepthSurface);
+	m_pd3dDevice->SetRenderTarget( 0, m_pSecondaryColorSurface );
+  m_pd3dDevice->SetDepthStencilSurface( m_pSecondaryDepthSurface );
 }
 
 void SecondaryBlend(int a)
@@ -178,10 +184,11 @@ void SecondaryBlend(int a)
 
 // If we rendered the scene to a secondary render target, then we now need
 // to render the texture to the primary backbuffer.
-void RenderSecondary(LPDIRECT3DSURFACE8 m_pBackBuffer, LPDIRECT3DSURFACE8 m_pDepthBuffer, int blend)
+void RenderSecondary(LPDIRECT3DSURFACE9 m_pBackBuffer, LPDIRECT3DSURFACE9 m_pDepthBuffer, int blend)
 {
 	// Set the render target back to be the app's main backbuffer
-	m_pd3dDevice->SetRenderTarget( m_pBackBuffer, m_pDepthBuffer );
+  m_pd3dDevice->SetRenderTarget( 0, m_pBackBuffer );
+  m_pd3dDevice->SetDepthStencilSurface( m_pDepthBuffer );
 
 	// Render the secondary color surface to the screen
 	struct VERTEX { D3DXVECTOR4 p; FLOAT tu, tv; 
@@ -191,7 +198,7 @@ void RenderSecondary(LPDIRECT3DSURFACE8 m_pBackBuffer, LPDIRECT3DSURFACE8 m_pDep
 	v[1].p = D3DXVECTOR4( 640 - 0.5f,   0 - 0.5f, 0, 0 );  v[1].tu = 640; v[1].tv =   0;
 	v[2].p = D3DXVECTOR4( 640 - 0.5f, 480 - 0.5f, 0, 0 );  v[2].tu = 640; v[2].tv = 480;
 	v[3].p = D3DXVECTOR4(   0 - 0.5f, 480 - 0.5f, 0, 0 );  v[3].tu =   0; v[3].tv = 480;
-	m_pd3dDevice->SetVertexShader( D3DFVF_XYZRHW|D3DFVF_TEX1);
+	m_pd3dDevice->SetFVF( D3DFVF_XYZRHW|D3DFVF_TEX1);
 
 	m_pd3dDevice->SetTexture( 0, m_pSecondaryTexture );
 	m_pd3dDevice->SetTextureStageState( 0, D3DTSS_TEXCOORDINDEX, 0);
@@ -202,10 +209,10 @@ void RenderSecondary(LPDIRECT3DSURFACE8 m_pBackBuffer, LPDIRECT3DSURFACE8 m_pDep
 	//   pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE );
 	m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAARG1, D3DTA_TFACTOR );
 	m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAOP,   D3DTOP_SELECTARG1 );
-	m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ADDRESSU,  D3DTADDRESS_CLAMP );
-	m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ADDRESSV,  D3DTADDRESS_CLAMP );
-	g_pd3dDevice->SetTextureStageState( 0, D3DTSS_MINFILTER , D3DTEXF_LINEAR);
-	g_pd3dDevice->SetTextureStageState( 0, D3DTSS_MAGFILTER , D3DTEXF_LINEAR);
+	m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSU,  D3DTADDRESS_CLAMP );
+	m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSV,  D3DTADDRESS_CLAMP );
+	g_pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER , D3DTEXF_LINEAR);
+	g_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER , D3DTEXF_LINEAR);
 
 	float mb=1-CLAMP(motionblur);
 	m_pd3dDevice->SetRenderState( D3DRS_TEXTUREFACTOR, ((int)(mb*255))<<24);

@@ -6,9 +6,9 @@
 //-----------------------------------------------------------------------------
 // Global variables
 //-----------------------------------------------------------------------------
-LPDIRECT3D8             g_pD3D       = NULL; // Used to create the D3DDevice
-LPDIRECT3DDEVICE8       g_pd3dDevice = NULL; // Our rendering device
-LPDIRECT3DVERTEXBUFFER8 g_pVB        = NULL; // Buffer to hold vertices
+LPDIRECT3D9             g_pD3D       = NULL; // Used to create the D3DDevice
+LPDIRECT3DDEVICE9       g_pd3dDevice = NULL; // Our rendering device
+LPDIRECT3DVERTEXBUFFER9 g_pVB        = NULL; // Buffer to hold vertices
 
 // A structure for our custom vertex type
 struct CUSTOMVERTEX
@@ -48,7 +48,7 @@ VOID InitTime()
 HRESULT InitD3D()
 {
     // Create the D3D object.
-    if( NULL == ( g_pD3D = Direct3DCreate8( D3D_SDK_VERSION ) ) )
+    if( NULL == ( g_pD3D = Direct3DCreate9( D3D_SDK_VERSION ) ) )
         return E_FAIL;
 
     // Set up the structure used to create the D3DDevice.
@@ -56,12 +56,12 @@ HRESULT InitD3D()
     ZeroMemory( &d3dpp, sizeof(d3dpp) );
     d3dpp.BackBufferWidth        = 640;
     d3dpp.BackBufferHeight       = 480;
-    d3dpp.BackBufferFormat       = D3DFMT_LIN_X8R8G8B8;
+    d3dpp.BackBufferFormat       = D3DFMT_X8R8G8B8;
     d3dpp.BackBufferCount        = 1;
     d3dpp.EnableAutoDepthStencil = TRUE;
     d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;
     d3dpp.SwapEffect             = D3DSWAPEFFECT_DISCARD;
-    d3dpp.FullScreen_PresentationInterval = D3DPRESENT_INTERVAL_ONE_OR_IMMEDIATE;
+    d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
 
     // Create the Direct3D device.
     if( FAILED( g_pD3D->CreateDevice( 0, D3DDEVTYPE_HAL, NULL,
@@ -110,7 +110,7 @@ HRESULT InitVB()
     if( FAILED( g_pd3dDevice->CreateVertexBuffer( 3*sizeof(CUSTOMVERTEX),
                                                   D3DUSAGE_WRITEONLY, 
                                                   D3DFVF_CUSTOMVERTEX,
-                                                  D3DPOOL_MANAGED, &g_pVB ) ) )
+                                                  D3DPOOL_MANAGED, &g_pVB, NULL ) ) )
         return E_FAIL;
 
     // Now we fill the vertex buffer. To do this, we need to Lock() the VB to
@@ -120,7 +120,7 @@ HRESULT InitVB()
     // frame.
 
     CUSTOMVERTEX* pVertices;
-    if( FAILED( g_pVB->Lock( 0, 0, (BYTE**)&pVertices, 0 ) ) )
+    if( FAILED( g_pVB->Lock( 0, 0, (void**)&pVertices, 0 ) ) )
         return E_FAIL;
     memcpy( pVertices, g_Vertices, 3*sizeof(CUSTOMVERTEX) );
     g_pVB->Unlock();
@@ -185,8 +185,8 @@ VOID Render()
     // with. Finally, we call DrawPrimitive() which does the actual rendering
     // of our geometry (in this case, just one triangle).
 	g_pd3dDevice->SetRenderState( D3DRS_LIGHTING, FALSE);
-    g_pd3dDevice->SetStreamSource( 0, g_pVB, sizeof(CUSTOMVERTEX) );
-    g_pd3dDevice->SetVertexShader( D3DFVF_CUSTOMVERTEX );
+    g_pd3dDevice->SetStreamSource( 0, g_pVB, 0, sizeof(CUSTOMVERTEX) );
+    g_pd3dDevice->SetFVF( D3DFVF_CUSTOMVERTEX );
     g_pd3dDevice->DrawPrimitive( D3DPT_TRIANGLELIST, 0, 1 );
 
     // End the scene

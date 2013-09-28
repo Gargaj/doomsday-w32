@@ -43,7 +43,7 @@ struct POINTVERTEX
 }
 
 
-extern LPDIRECT3DVERTEXBUFFER8 ifs_vb; // Buffer to hold vertices
+extern LPDIRECT3DVERTEXBUFFER9 ifs_vb; // Buffer to hold vertices
 
 int m_dwFlush=SUB_BATCH_SIZE;
 int m_dwDiscard=SUB_BATCH_SIZE*4;
@@ -493,8 +493,8 @@ void System2::renderFlame()
     DWORD        dwNumParticlesToRender = 0;
 
 	// Set up the vertex buffer to be rendered
-    g_pd3dDevice->SetStreamSource( 0, ifs_vb, sizeof(POINTVERTEX) );
-    g_pd3dDevice->SetVertexShader( POINTVERTEX_FVF );
+    g_pd3dDevice->SetStreamSource( 0, ifs_vb, 0, sizeof(POINTVERTEX) );
+    g_pd3dDevice->SetFVF( POINTVERTEX_FVF );
 
 	m_dwBase += m_dwFlush;
 	if(m_dwBase >= m_dwDiscard) m_dwBase = 0;
@@ -502,7 +502,7 @@ void System2::renderFlame()
 #define D3DLOCK_DISCARD 0
 
 	WRAP(ifs_vb->Lock( m_dwBase * sizeof(POINTVERTEX), m_dwFlush * sizeof(POINTVERTEX),
-		(BYTE**)&pVertices, m_dwBase ? D3DLOCK_NOOVERWRITE : D3DLOCK_DISCARD ));
+		(void**)&pVertices, m_dwBase ? D3DLOCK_NOOVERWRITE : D3DLOCK_DISCARD ));
 
     POINTVERTEX* p=pVertices;
 //				printf("p pVertices[m_dwBase]\n");
@@ -756,7 +756,7 @@ void System2::renderFlame()
 				if(m_dwBase >= m_dwDiscard) m_dwBase = 0;
 
 				WRAP(ifs_vb->Lock( m_dwBase * sizeof(POINTVERTEX), m_dwFlush * sizeof(POINTVERTEX),
-		            (BYTE**) &pVertices, m_dwBase ? D3DLOCK_NOOVERWRITE : D3DLOCK_DISCARD ) );
+		            (void**) &pVertices, m_dwBase ? D3DLOCK_NOOVERWRITE : D3DLOCK_DISCARD ) );
 
 //				printf("p pVertices[m_dwBase]\n");
 				p=pVertices;

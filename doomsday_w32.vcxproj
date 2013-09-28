@@ -73,7 +73,6 @@
     <ClCompile Include="demo.cpp" />
     <ClCompile Include="hienot.cpp" />
     <ClCompile Include="ifspoints.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="mat3x3.c" />
     <ClCompile Include="Misc.cpp" />
     <ClCompile Include="mosaic.cpp" />
@@ -82,7 +81,6 @@
     <ClCompile Include="slides.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="System2.cpp" />
-    <ClCompile Include="wmastream.cpp" />
     <ClCompile Include="xboxdemo.cpp" />
     <ClCompile Include="zoomer.cpp" />
   </ItemGroup>
@@ -102,7 +100,11 @@
     <ClInclude Include="track17.h" />
     <ClInclude Include="track17b.h" />
     <ClInclude Include="track19b.h" />
-    <ClInclude Include="wmastream.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="zlib\contrib\vstudio\vc8\zlibstat.vcxproj">
+      <Project>{745dec58-ebb3-47a9-a9b8-4c6627c01bf8}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

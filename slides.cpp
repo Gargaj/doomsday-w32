@@ -4,8 +4,8 @@
 #define m_pd3dDevice g_pd3dDevice
 #define pd3dDevice g_pd3dDevice
 
-LPDIRECT3DTEXTURE8      slides_tex= NULL;
-LPDIRECT3DTEXTURE8      tex_scroll= NULL;
+LPDIRECT3DTEXTURE9      slides_tex= NULL;
+LPDIRECT3DTEXTURE9      tex_scroll= NULL;
 
 float scroller_flash=0;
 
@@ -13,19 +13,19 @@ int slides_texture=0;
 int slides_current_texture=-1;
 
 char *slideshow[]={
-	"d:\\media\\credits01.png",
-	"d:\\media\\credits02.png",
-	"d:\\media\\sleng1.jpg",
-	"d:\\media\\sleng2.jpg",
-	"d:\\media\\sleng3.jpg",
-	"d:\\media\\sleng4.jpg",
-	"d:\\media\\krediitit.jpg",
+	"media\\credits01.png",
+	"media\\credits02.png",
+	"media\\sleng1.jpg",
+	"media\\sleng2.jpg",
+	"media\\sleng3.jpg",
+	"media\\sleng4.jpg",
+	"media\\krediitit.jpg",
 };
 
 void slides_init()
 {
 	slides_current_texture=-1;
-	WRAP(D3DXCreateTextureFromFile( g_pd3dDevice, "d:\\media\\sarvihhh.dds", &tex_scroll));
+	WRAP(D3DXCreateTextureFromFile( g_pd3dDevice, "media\\sarvihhh.dds", &tex_scroll));
 }
 
 
@@ -64,7 +64,7 @@ void slides_render(float t)
     v[1].p = D3DXVECTOR4( 640 - 0.5f,  48 - 0.5f, 0, 0 );  v[1].tu = 1; v[1].tv =   0;
     v[2].p = D3DXVECTOR4( 640 - 0.5f, 432 - 0.5f, 0, 0 );  v[2].tu = 1; v[2].tv =1;
     v[3].p = D3DXVECTOR4(   0 - 0.5f, 432 - 0.5f, 0, 0 );  v[3].tu =   0; v[3].tv = 1;
-	m_pd3dDevice->SetVertexShader( D3DFVF_XYZRHW|D3DFVF_TEX1);
+	m_pd3dDevice->SetFVF( D3DFVF_XYZRHW|D3DFVF_TEX1);
 
     m_pd3dDevice->SetTexture( 0, slides_tex );
 	m_pd3dDevice->SetTextureStageState( 0, D3DTSS_TEXCOORDINDEX, 0);
@@ -74,10 +74,10 @@ void slides_render(float t)
 
 	m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAARG1, D3DTA_TFACTOR );
 	m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAOP,   D3DTOP_SELECTARG1 );
-    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ADDRESSU,  D3DTADDRESS_CLAMP );
-    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ADDRESSV,  D3DTADDRESS_CLAMP );
-	g_pd3dDevice->SetTextureStageState( 0, D3DTSS_MINFILTER , D3DTEXF_LINEAR);
-	g_pd3dDevice->SetTextureStageState( 0, D3DTSS_MAGFILTER , D3DTEXF_LINEAR);
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSU,  D3DTADDRESS_CLAMP );
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSV,  D3DTADDRESS_CLAMP );
+	g_pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER , D3DTEXF_LINEAR);
+	g_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER , D3DTEXF_LINEAR);
 
 	int color=CLAMP(fade)*255;
 	m_pd3dDevice->SetRenderState( D3DRS_TEXTUREFACTOR, 0xff<<24|(0x010101*color));
@@ -118,7 +118,7 @@ void scroll_render(float t)
     v[1].p = D3DXVECTOR4( 640 - 0.5f,   0 - 0.5f, 0, 0 );  v[1].tu = .3f+p; v[1].tv = 0;
     v[2].p = D3DXVECTOR4( 640 - 0.5f, 480 - 0.5f, 0, 0 );  v[2].tu = .3f+p; v[2].tv = 1;
     v[3].p = D3DXVECTOR4(   0 - 0.5f, 480 - 0.5f, 0, 0 );  v[3].tu = p; v[3].tv = 1;
-	m_pd3dDevice->SetVertexShader( D3DFVF_XYZRHW|D3DFVF_TEX1);
+	m_pd3dDevice->SetFVF( D3DFVF_XYZRHW|D3DFVF_TEX1);
 
     m_pd3dDevice->SetTexture( 0, tex_scroll );
 	m_pd3dDevice->SetTextureStageState( 0, D3DTSS_TEXCOORDINDEX, 0);
@@ -140,10 +140,10 @@ void scroll_render(float t)
 
 	m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAARG1, D3DTA_TFACTOR );
 	m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAOP,   D3DTOP_SELECTARG1 );
-    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ADDRESSU,  D3DTADDRESS_CLAMP );
-    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ADDRESSV,  D3DTADDRESS_CLAMP );
-	g_pd3dDevice->SetTextureStageState( 0, D3DTSS_MINFILTER , D3DTEXF_LINEAR);
-	g_pd3dDevice->SetTextureStageState( 0, D3DTSS_MAGFILTER , D3DTEXF_LINEAR);
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSU,  D3DTADDRESS_CLAMP );
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSV,  D3DTADDRESS_CLAMP );
+	g_pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER , D3DTEXF_LINEAR);
+	g_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER , D3DTEXF_LINEAR);
 
 
 	m_pd3dDevice->SetRenderState( D3DRS_ZENABLE,   FALSE );

@@ -17,8 +17,8 @@ float zoomer_biasb=0;
 //-----------------------------------------------------------------------------
 // Global variables
 //-----------------------------------------------------------------------------
-LPDIRECT3DVERTEXBUFFER8 g_pVB        = NULL; // Buffer to hold vertices
-LPDIRECT3DTEXTURE8      g_pTexture   = NULL; // Our texture
+LPDIRECT3DVERTEXBUFFER9 g_pVB        = NULL; // Buffer to hold vertices
+LPDIRECT3DTEXTURE9      g_pTexture   = NULL; // Our texture
 
 //extern int zoomer0, zoomer1;
 /*
@@ -53,17 +53,17 @@ struct CUSTOMVERTEX
 #define D3DFVF_CUSTOMVERTEX (D3DFVF_XYZ|D3DFVF_DIFFUSE|D3DFVF_TEX1)
 
 
-DWORD ps_color3x3;
+LPDIRECT3DPIXELSHADER9 ps_color3x3;
 
 void ps_set_colormatrix(float mat[3][3])
 {
 	for(int i=0;i<3;i++)
 	{
 		float v[4]={mat[0][i],mat[1][i],mat[2][i], 0}; 
-		g_pd3dDevice->SetPixelShaderConstant(i, v, 1);
+		g_pd3dDevice->SetPixelShaderConstantF(i, v, 1);
 	}
 	float bias[4]={zoomer_biasr+zoomer_bias,zoomer_biasg+zoomer_bias,zoomer_biasb+zoomer_bias,0};
-	g_pd3dDevice->SetPixelShaderConstant(3, bias, 1);
+	g_pd3dDevice->SetPixelShaderConstantF(3, bias, 1);
 }
 
 void zoomer_none()
@@ -111,7 +111,7 @@ int zoomer_load_gzbunch(ANIMSET *set, const char *filename, int sizePerTexture)
 		int frames=0;
 		set->speed=8;
 		set->rotate=0;
-		set->frames=new LPDIRECT3DTEXTURE8[256];
+		set->frames=new LPDIRECT3DTEXTURE9[256];
 
 
 		gzFile file;
@@ -158,7 +158,7 @@ void zoomer_init()
 
 	LPD3DXBUFFER pCode;                  // buffer with the assembled shader code
 	LPD3DXBUFFER pErrorMsgs;             // buffer with error messages
-	D3DXAssembleShaderFromFile( "color3x3.psh", 0, NULL, &pCode, NULL );
+	D3DXAssembleShaderFromFile( "color3x3.psh", 0, NULL, NULL, &pCode, &pErrorMsgs );
 
 	if( FAILED( g_pd3dDevice->CreatePixelShader( (DWORD*)pCode->GetBufferPointer(), &ps_color3x3 )))
 	{
@@ -206,26 +206,26 @@ void zoomer_init()
 */
 
 	animCount=0;
-	zoomer_load_gzbunch(&animSet[animCount++], "D:\\media\\anim.zz", DDS_SIZE_256X256_DXT1);
-	zoomer_load_gzbunch(&animSet[animCount++], "D:\\media\\b.zz", DDS_SIZE_256X256_DXT1);
-	zoomer_load_gzbunch(&animSet[animCount++], "D:\\media\\c.zz", DDS_SIZE_256X256_DXT1);
-	zoomer_load_gzbunch(&animSet[animCount++], "D:\\media\\dd.zz", DDS_SIZE_256X256_DXT1);
-	zoomer_load_gzbunch(&animSet[animCount++], "D:\\media\\j.zz", DDS_SIZE_256X256_DXT1);
-	zoomer_load_gzbunch(&animSet[animCount++], "D:\\media\\k.zz", DDS_SIZE_256X256_DXT1);
-	zoomer_load_gzbunch(&animSet[animCount++], "D:\\media\\l.zz", DDS_SIZE_256X256_DXT1);
-	zoomer_load_gzbunch(&animSet[animCount++], "D:\\media\\nig.zz", DDS_SIZE_256X256_DXT1);
-	zoomer_load_gzbunch(&animSet[animCount++], "D:\\media\\pp.zz", DDS_SIZE_256X256_DXT1);
-	zoomer_load_gzbunch(&animSet[animCount++], "D:\\media\\r.zz", DDS_SIZE_256X256_DXT1);
-	zoomer_load_gzbunch(&animSet[animCount++], "D:\\media\\voi.zz", DDS_SIZE_256X256_DXT1);
-	zoomer_load_gzbunch(&animSet[animCount++], "D:\\media\\w2.zz", DDS_SIZE_256X256_DXT1);
-	zoomer_load_gzbunch(&animSet[animCount++], "D:\\media\\x.zz", DDS_SIZE_256X256_DXT1);
-	zoomer_load_gzbunch(&animSet[animCount++], "D:\\media\\y.zz", DDS_SIZE_256X256_DXT1);
+	zoomer_load_gzbunch(&animSet[animCount++], "media\\anim.zz", DDS_SIZE_256X256_DXT1);
+	zoomer_load_gzbunch(&animSet[animCount++], "media\\b.zz", DDS_SIZE_256X256_DXT1);
+	zoomer_load_gzbunch(&animSet[animCount++], "media\\c.zz", DDS_SIZE_256X256_DXT1);
+	zoomer_load_gzbunch(&animSet[animCount++], "media\\dd.zz", DDS_SIZE_256X256_DXT1);
+	zoomer_load_gzbunch(&animSet[animCount++], "media\\j.zz", DDS_SIZE_256X256_DXT1);
+	zoomer_load_gzbunch(&animSet[animCount++], "media\\k.zz", DDS_SIZE_256X256_DXT1);
+	zoomer_load_gzbunch(&animSet[animCount++], "media\\l.zz", DDS_SIZE_256X256_DXT1);
+	zoomer_load_gzbunch(&animSet[animCount++], "media\\nig.zz", DDS_SIZE_256X256_DXT1);
+	zoomer_load_gzbunch(&animSet[animCount++], "media\\pp.zz", DDS_SIZE_256X256_DXT1);
+	zoomer_load_gzbunch(&animSet[animCount++], "media\\r.zz", DDS_SIZE_256X256_DXT1);
+	zoomer_load_gzbunch(&animSet[animCount++], "media\\voi.zz", DDS_SIZE_256X256_DXT1);
+	zoomer_load_gzbunch(&animSet[animCount++], "media\\w2.zz", DDS_SIZE_256X256_DXT1);
+	zoomer_load_gzbunch(&animSet[animCount++], "media\\x.zz", DDS_SIZE_256X256_DXT1);
+	zoomer_load_gzbunch(&animSet[animCount++], "media\\y.zz", DDS_SIZE_256X256_DXT1);
 
 
 	// Create the vertex buffer.
     if( FAILED( g_pd3dDevice->CreateVertexBuffer( 50*2*sizeof(CUSTOMVERTEX),
                                                   0, D3DFVF_CUSTOMVERTEX,
-                                                  D3DPOOL_DEFAULT, &g_pVB ) ) )
+                                                  D3DPOOL_DEFAULT, &g_pVB, NULL ) ) )
     {
         return ;//E_FAIL;
     }
@@ -233,7 +233,7 @@ void zoomer_init()
     // Fill the vertex buffer. We are setting the tu and tv texture
     // coordinates, which range from 0.0 to 1.0
     CUSTOMVERTEX* pVertices;
-    if( FAILED( g_pVB->Lock( 0, 0, (BYTE**)&pVertices, 0 ) ) ) return ;//E_FAIL;
+    if( FAILED( g_pVB->Lock( 0, 0, (void**)&pVertices, 0 ) ) ) return ;//E_FAIL;
 
 	pVertices[0].position=D3DXVECTOR3(-1, 1,0);
 	pVertices[1].position=D3DXVECTOR3( 1, 1,0);
@@ -375,11 +375,11 @@ void zoomer_render(float t)
     g_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG2, D3DTA_TFACTOR );
     //g_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAOP,   D3DTOP_DISABLE );
 
-	g_pd3dDevice->SetTextureStageState( 0, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
-	g_pd3dDevice->SetTextureStageState( 0, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
+	g_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
+	g_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
 
-	g_pd3dDevice->SetTextureStageState( 0, D3DTSS_MINFILTER , D3DTEXF_LINEAR);
-	g_pd3dDevice->SetTextureStageState( 0, D3DTSS_MAGFILTER , D3DTEXF_LINEAR);
+	g_pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER , D3DTEXF_LINEAR);
+	g_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER , D3DTEXF_LINEAR);
 
 	g_pd3dDevice->SetRenderState( D3DRS_ALPHABLENDENABLE,   TRUE );
 	g_pd3dDevice->SetRenderState( D3DRS_SRCBLEND, D3DBLEND_SRCALPHA );
@@ -401,7 +401,7 @@ void zoomer_render(float t)
 	g_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE|D3DTA_COMPLEMENT );
 	g_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
 
-    g_pd3dDevice->SetVertexShader( D3DFVF_CUSTOMVERTEX );
+    g_pd3dDevice->SetFVF( D3DFVF_CUSTOMVERTEX );
 
 	g_pd3dDevice->SetPixelShader( ps_color3x3 );
 
@@ -486,7 +486,7 @@ void zoomer_render(float t)
 			D3DXMATRIX r;
 			D3DXMatrixRotationZ(&r, animSet[a].rott);
 
-			double v=1.0/pow(2,(i)-1);
+			double v=1.0/powf(2,(i)-1);
 			double s=t*v*4;
 
 			D3DXMatrixScaling(&m, s, s, 0);
@@ -496,7 +496,7 @@ void zoomer_render(float t)
 
 		    g_pd3dDevice->SetRenderState( D3DRS_STENCILREF, stencil);
 			g_pd3dDevice->SetTexture( 0, animSet[a].frames[((idx+i-1)%animSet[a].frameCount)] );
-			g_pd3dDevice->SetStreamSource( 0, g_pVB, sizeof(CUSTOMVERTEX) );
+			g_pd3dDevice->SetStreamSource( 0, g_pVB, 0, sizeof(CUSTOMVERTEX) );
 			g_pd3dDevice->DrawPrimitive( D3DPT_TRIANGLESTRIP, 0, 2 );
 		}
 		stencil++;

@@ -10,9 +10,9 @@ IFS::Animation2			g_anim;
 #define m_pd3dDevice g_pd3dDevice
 #define pd3dDevice g_pd3dDevice
 
-LPDIRECT3DTEXTURE8      bg= NULL; // Our texture
-LPDIRECT3DTEXTURE8      m_pParticleTexture= NULL; // Our texture
-LPDIRECT3DVERTEXBUFFER8 ifs_vb= NULL; // Buffer to hold vertices
+LPDIRECT3DTEXTURE9      bg= NULL; // Our texture
+LPDIRECT3DTEXTURE9      m_pParticleTexture= NULL; // Our texture
+LPDIRECT3DVERTEXBUFFER9 ifs_vb= NULL; // Buffer to hold vertices
 
 int ifs_number=0;
 
@@ -36,17 +36,17 @@ float ifs_z=0;
 int ifs_loaded=0;
 
 char *ifs_setit[]={
-	"d:\\media\\feathers-anim.fs2",
-	"d:\\media\\kuul.fs2",
-	"d:\\media\\kuuler.fs2",
-	"d:\\media\\natinpi.fs2",
-	"d:\\media\\qukka2.fs2",
-	"d:\\media\\qukka3lyhyt.fs2",
-	"d:\\media\\rinki.fs2",
-	"d:\\media\\syke.fs2",
-	"d:\\media\\ylvas-00.fs2",
-	"d:\\media\\YRITELMA-00.fs2",
-	"d:\\media\\YRITELMA-01.fs2",
+	"media\\feathers-anim.fs2",
+	"media\\kuul.fs2",
+	"media\\kuuler.fs2",
+	"media\\natinpi.fs2",
+	"media\\qukka2.fs2",
+	"media\\qukka3lyhyt.fs2",
+	"media\\rinki.fs2",
+	"media\\syke.fs2",
+	"media\\ylvas-00.fs2",
+	"media\\YRITELMA-00.fs2",
+	"media\\YRITELMA-01.fs2",
 };
 
 void ifs_load(int c)
@@ -61,15 +61,15 @@ void ifs_load(int c)
 
 void ifs_init()
 {
-//	WRAP(D3DXCreateTextureFromFile( g_pd3dDevice, "d:\\media\\foo.bmp", &bg));
-	WRAP(D3DXCreateTextureFromFile( g_pd3dDevice, "d:\\media\\particle.tga", &m_pParticleTexture));
+//	WRAP(D3DXCreateTextureFromFile( g_pd3dDevice, "media\\foo.bmp", &bg));
+	WRAP(D3DXCreateTextureFromFile( g_pd3dDevice, "media\\particle.tga", &m_pParticleTexture));
 
 //	printf("CreateVertexBuffer %d %d\n", m_dwDiscard, sizeof(POINTVERTEX));
     g_pd3dDevice->CreateVertexBuffer( m_dwDiscard * sizeof(POINTVERTEX), 
 		D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY | D3DUSAGE_POINTS, 
         POINTVERTEX_FVF, 
 		D3DPOOL_DEFAULT, 
-		&ifs_vb);
+		&ifs_vb,NULL);
 
 	//	srand(time(0));
 
@@ -90,7 +90,7 @@ void ifs_init()
 
 
 
-void render_bg(LPDIRECT3DDEVICE8 pd3dDevice, LPDIRECT3DTEXTURE8 bg)
+void render_bg(LPDIRECT3DDEVICE9 pd3dDevice, LPDIRECT3DTEXTURE9 bg)
 {
     // Render the secondary color surface to the screen
     struct VERTEX { D3DXVECTOR4 p; FLOAT tu, tv; 
@@ -100,7 +100,7 @@ void render_bg(LPDIRECT3DDEVICE8 pd3dDevice, LPDIRECT3DTEXTURE8 bg)
     v[1].p = D3DXVECTOR4( 640 - 0.5f,   0 - 0.5f, 0, 0 );  v[1].tu = 640; v[1].tv =   0;
     v[2].p = D3DXVECTOR4( 640 - 0.5f, 480 - 0.5f, 0, 0 );  v[2].tu = 640; v[2].tv = 480;
     v[3].p = D3DXVECTOR4(   0 - 0.5f, 480 - 0.5f, 0, 0 );  v[3].tu =   0; v[3].tv = 480;
-	pd3dDevice->SetVertexShader( D3DFVF_XYZRHW|D3DFVF_TEX1);
+	pd3dDevice->SetFVF( D3DFVF_XYZRHW|D3DFVF_TEX1);
 
     pd3dDevice->SetTexture( 0, bg);
 	pd3dDevice->SetTextureStageState( 0, D3DTSS_TEXCOORDINDEX, 0);
@@ -110,10 +110,10 @@ void render_bg(LPDIRECT3DDEVICE8 pd3dDevice, LPDIRECT3DTEXTURE8 bg)
 
 	pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAARG1, D3DTA_TFACTOR );
 	pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAOP,   D3DTOP_SELECTARG1 );
-    pd3dDevice->SetTextureStageState( 0, D3DTSS_ADDRESSU,  D3DTADDRESS_CLAMP );
-    pd3dDevice->SetTextureStageState( 0, D3DTSS_ADDRESSV,  D3DTADDRESS_CLAMP );
-	pd3dDevice->SetTextureStageState( 0, D3DTSS_MINFILTER , D3DTEXF_LINEAR);
-	pd3dDevice->SetTextureStageState( 0, D3DTSS_MAGFILTER , D3DTEXF_LINEAR);
+    pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSU,  D3DTADDRESS_CLAMP );
+    pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSV,  D3DTADDRESS_CLAMP );
+	pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER , D3DTEXF_LINEAR);
+	pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER , D3DTEXF_LINEAR);
 
 	pd3dDevice->SetRenderState( D3DRS_TEXTUREFACTOR, 0xff202020);
 
@@ -153,7 +153,7 @@ void ifs_clear()
     v[1].p = D3DXVECTOR4( 640 - 0.5f,   0 - 0.5f, 0, 0 );  v[1].tu = 640; v[1].tv =   0;
     v[2].p = D3DXVECTOR4( 640 - 0.5f, 480 - 0.5f, 0, 0 );  v[2].tu = 640; v[2].tv = 480;
     v[3].p = D3DXVECTOR4(   0 - 0.5f, 480 - 0.5f, 0, 0 );  v[3].tu =   0; v[3].tv = 480;
-	m_pd3dDevice->SetVertexShader( D3DFVF_XYZRHW|D3DFVF_TEX1);
+	m_pd3dDevice->SetFVF( D3DFVF_XYZRHW|D3DFVF_TEX1);
 
     m_pd3dDevice->SetTexture( 0, NULL);
 	m_pd3dDevice->SetTextureStageState( 0, D3DTSS_TEXCOORDINDEX, 0);
@@ -161,10 +161,10 @@ void ifs_clear()
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TFACTOR );
 	m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAARG1, D3DTA_TFACTOR );
 	m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAOP,   D3DTOP_SELECTARG1 );
-    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ADDRESSU,  D3DTADDRESS_CLAMP );
-    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ADDRESSV,  D3DTADDRESS_CLAMP );
-	g_pd3dDevice->SetTextureStageState( 0, D3DTSS_MINFILTER , D3DTEXF_LINEAR);
-	g_pd3dDevice->SetTextureStageState( 0, D3DTSS_MAGFILTER , D3DTEXF_LINEAR);
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSU,  D3DTADDRESS_CLAMP );
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSV,  D3DTADDRESS_CLAMP );
+	g_pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER , D3DTEXF_LINEAR);
+	g_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER , D3DTEXF_LINEAR);
 
 	m_pd3dDevice->SetRenderState( D3DRS_TEXTUREFACTOR, 48<<24);
 
@@ -259,7 +259,7 @@ void ifs_render(float t)
 
 	// Set up the vertex buffer to be rendered
 	//    pd3dDevice->SetStreamSource( 0, ifs_vb, 0, sizeof(POINTVERTEX) );
-	g_pd3dDevice->SetVertexShader( D3DFVF_XYZ | D3DFVF_DIFFUSE );
+	g_pd3dDevice->SetFVF( D3DFVF_XYZ | D3DFVF_DIFFUSE );
 /*
 g_pd3dDevice->SetRenderState (D3DRS_POINTSCALEENABLE, FALSE);
 // All textures must be turned off.
