@@ -174,6 +174,8 @@ int WINAPI WinMain( __in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, 
   BASS_Stop();
   BASS_Free();
 
+  demo_deinit();
+
   ShutdownD3D();
 
 }

@@ -64,6 +64,8 @@ struct CUSTOMVERTEX
 LPD3DXMESH cube;
 
 float *tiletime;
+LPDIRECT3DTEXTURE9 texOrig[512];
+int texOrigTotal = 0;
 
 void mosaic_init()
 {
@@ -72,6 +74,8 @@ void mosaic_init()
 	WRAP(D3DXCreateTextureFromFile( g_pd3dDevice, "media\\rip.dds", &tex_rip));
 
 	tiletime=new float[24*27];
+
+  texOrigTotal = 0;
 
 	int *p=new int[10000];
 	memset(p, -1, sizeof(int)*10000);
@@ -86,6 +90,7 @@ void mosaic_init()
 		{
 			sprintf(buf, "media\\mosaic\\%d.dds", t);
 			WRAP(D3DXCreateTextureFromFile( g_pd3dDevice, buf, &tex[i]));
+      texOrig[texOrigTotal++] = tex[i];
 			g_pd3dDevice->SetTexture(0, tex[i] );
 			p[t]=i;
 		}
@@ -96,6 +101,13 @@ void mosaic_init()
 	delete p;
 	//WRAP(cube.Create("media\\noppa-96faces-ok.xbg"));
   D3DXCreateBox( g_pd3dDevice, 1, 1, 1, &cube, NULL );
+}
+
+void mosaic_deinit()
+{
+  cube->Release();
+  for(int i=0;i<texOrigTotal;i++)
+    texOrig[i]->Release();
 }
 
 void mosaic_render(float t)

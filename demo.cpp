@@ -79,13 +79,22 @@ void midi_tracks(float t)
 
 void demo_init()
 {
-	ifs_init();
-	zoomer_init();
-	mosaic_init();
+  ifs_init();
+  zoomer_init();
+  mosaic_init();
 
-	slides_init();
+  slides_init();
 
-	part=3;
+  part=3;
+}
+
+void demo_deinit()
+{
+  ifs_deinit();
+  zoomer_deinit();
+  mosaic_deinit();
+
+  slides_deinit();
 }
 
 float syncPoint=0;

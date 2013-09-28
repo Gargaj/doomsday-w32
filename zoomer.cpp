@@ -255,6 +255,18 @@ void zoomer_init()
     return ;//S_OK;
 }
 
+void zoomer_deinit()
+{
+  g_pVB->Release();
+  for (int i=0; i<animCount; i++)
+  {
+    for (int j=0; j<animSet[i].frameCount; j++)
+    {
+      animSet[i].frames[j]->Release();
+    }
+  }
+  ps_color3x3->Release();
+}
 
 
 
@@ -525,7 +537,6 @@ void zoomer_render(float t)
 
 //    g_pd3dDevice->Present( NULL, NULL, NULL, NULL );
 }
-
 
 #ifdef _WINDOWS
 

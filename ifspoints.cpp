@@ -88,6 +88,12 @@ void ifs_init()
 	}
 
 
+void ifs_deinit()
+{
+  m_pParticleTexture->Release();
+  ifs_vb->Release();
+}
+
 
 
 void render_bg(LPDIRECT3DDEVICE9 pd3dDevice, LPDIRECT3DTEXTURE9 bg)

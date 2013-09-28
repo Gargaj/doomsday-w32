@@ -33,15 +33,20 @@
 #include "zlib/zlib.h"
 
 void demo_init();
+void demo_deinit();
 void demo_render(float t);
 
 void mosaic_init();
+void mosaic_deinit();
 void mosaic_render(float t);
 void zoomer_init();
+void zoomer_deinit();
 void zoomer_render(float t);
 void slides_init();
+void slides_deinit();
 void slides_render(float t);
 void ifs_init();
+void ifs_deinit();
 void ifs_render(float t);
 void meta_init();
 void meta_render(float t);
