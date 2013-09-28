@@ -63,7 +63,7 @@ void slides_render(float t)
     struct VERTEX { D3DXVECTOR4 p; FLOAT tu, tv; 
 	};
     VERTEX v[4];
-    v[0].p = D3DXVECTOR4(  50 - 0.5f,  48 - 0.5f, 0, 0 );  v[0].tu =   0; v[0].tv =   0;
+    v[0].p = D3DXVECTOR4(   0 - 0.5f,  48 - 0.5f, 0, 0 );  v[0].tu =   0; v[0].tv =   0;
     v[1].p = D3DXVECTOR4( 640 - 0.5f,  48 - 0.5f, 0, 0 );  v[1].tu = 1; v[1].tv =   0;
     v[2].p = D3DXVECTOR4( 640 - 0.5f, 432 - 0.5f, 0, 0 );  v[2].tu = 1; v[2].tv =1;
     v[3].p = D3DXVECTOR4(   0 - 0.5f, 432 - 0.5f, 0, 0 );  v[3].tu =   0; v[3].tv = 1;
@@ -106,6 +106,7 @@ void slides_render(float t)
 
 }
 
+#if 0
 
 void scroll_render(float t)
 {
@@ -165,3 +166,4 @@ void scroll_render(float t)
 
 
 }
+#endif // 0

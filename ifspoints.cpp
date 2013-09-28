@@ -239,18 +239,18 @@ void ifs_render(float t)
 	g_pd3dDevice->SetTransform( D3DTS_PROJECTION, &matProj );
 
 
-	g_pd3dDevice->SetTexture(3, m_pParticleTexture );
+	g_pd3dDevice->SetTexture(0, m_pParticleTexture );
 
 	int alpha=(int)(255*fade);
 	m_pd3dDevice->SetRenderState( D3DRS_TEXTUREFACTOR, 0x01010101*(alpha));
 
-	m_pd3dDevice->SetTextureStageState( 3, D3DTSS_TEXCOORDINDEX, 0);
-    m_pd3dDevice->SetTextureStageState( 3, D3DTSS_COLOROP,   D3DTOP_MODULATE );
-    m_pd3dDevice->SetTextureStageState( 3, D3DTSS_COLORARG2, D3DTA_CURRENT);
-    m_pd3dDevice->SetTextureStageState( 3, D3DTSS_COLORARG1, D3DTA_TEXTURE );
-    m_pd3dDevice->SetTextureStageState( 3, D3DTSS_ALPHAOP,   D3DTOP_MODULATE );
-    m_pd3dDevice->SetTextureStageState( 3, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
-    m_pd3dDevice->SetTextureStageState( 3, D3DTSS_ALPHAARG1, D3DTA_CURRENT );
+	m_pd3dDevice->SetTextureStageState( 0, D3DTSS_TEXCOORDINDEX, 0);
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLOROP,   D3DTOP_MODULATE );
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE );
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAOP,   D3DTOP_SELECTARG2 );
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAARG1, D3DTA_CURRENT );
 
 
 	// Set the render states for using point sprites
@@ -290,7 +290,7 @@ g_pd3dDevice->SetRenderState(D3DRS_POINTSIZE, 1.0);
 	g_anim.time = fmodf(t, g_anim.getEndTime());
 	g_anim.renderFlame();
 
-	g_pd3dDevice->SetTexture(3, NULL);
+	g_pd3dDevice->SetTexture(0, NULL);
 	g_pd3dDevice->SetRenderState( D3DRS_ZWRITEENABLE, TRUE );
 	g_pd3dDevice->SetRenderState( D3DRS_ALPHABLENDENABLE, FALSE );
 	g_pd3dDevice->SetRenderState( D3DRS_POINTSPRITEENABLE, FALSE);
