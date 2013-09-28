@@ -11,6 +11,7 @@ unsigned int closing = 0;
 HWND hwnd = NULL;
 LPDIRECT3DSURFACE9 main_back;
 LPDIRECT3DSURFACE9 main_depth;
+LPDIRECT3D9 d3d = NULL;
 LPDIRECT3DDEVICE9 g_pd3dDevice = NULL; // Our rendering device
 
 LRESULT WINAPI WndProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
@@ -74,7 +75,6 @@ HRESULT InitD3D( unsigned int xres, unsigned int yres, bool fullscreen )
     dwStyle, rc.left, rc.top, rc.right-rc.left, rc.bottom-rc.top,
     NULL, NULL, wc.hInstance, NULL );
 
-  LPDIRECT3D9 d3d;
   if( NULL == ( d3d = Direct3DCreate9( D3D_SDK_VERSION ) ) )
     return E_FAIL;
 
@@ -97,7 +97,7 @@ HRESULT InitD3D( unsigned int xres, unsigned int yres, bool fullscreen )
   d3dpp.BackBufferCount = 0;	
 
   d3dpp.EnableAutoDepthStencil=true;
-  d3dpp.AutoDepthStencilFormat=D3DFMT_D16;
+  d3dpp.AutoDepthStencilFormat=D3DFMT_D24S8;
   d3dpp.hDeviceWindow=hwnd;
   d3dpp.Flags=0;//D3DPRESENTFLAG_LOCKABLE_BACKBUFFER;
   d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
@@ -132,6 +132,13 @@ HRESULT InitD3D( unsigned int xres, unsigned int yres, bool fullscreen )
 
   return S_OK;
 }
+void ShutdownD3D() 
+{
+  g_pd3dDevice->Release();
+  d3d->Release();
+  DestroyWindow(hwnd);
+  UnregisterClass("dsd",GetModuleHandle(NULL));
+}
 int WINAPI WinMain( __in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, __in LPSTR lpCmdLine, __in int nShowCmd )
 {
   InitD3D( 640, 480, false );
@@ -160,4 +167,10 @@ int WINAPI WinMain( __in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, 
     demo_render( t );
     g_pd3dDevice->Present( NULL, NULL, NULL, NULL );
   }
+
+  BASS_Stop();
+  BASS_Free();
+
+  ShutdownD3D();
+
 }
