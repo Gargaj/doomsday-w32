@@ -172,7 +172,9 @@ int WINAPI WinMain( __in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, 
     }
 
     float t = BASS_ChannelBytes2Seconds( hStream, BASS_ChannelGetPosition( hStream, BASS_POS_BYTE ) );
-    
+    if (t > 330.5)
+      break;
+
     g_pd3dDevice->Clear( 0L, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER|D3DCLEAR_STENCIL, 0xff000000, 1.0f, 0L );
     if (nFrame > 0)
       g_pd3dDevice->StretchRect( g_pPreviousBackBufferSurface, NULL, main_back, NULL, D3DTEXF_LINEAR );
