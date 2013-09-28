@@ -3,7 +3,7 @@
 
 #define m_pd3dDevice g_pd3dDevice
 
-//#define ENABLE_POSTPROCESSING
+#define ENABLE_POSTPROCESSING
 
 LPDIRECT3DTEXTURE9       m_pSecondaryTexture;
 LPDIRECT3DSURFACE9       m_pSecondaryColorSurface;
@@ -154,6 +154,14 @@ HRESULT CreateSecondaryRenderTarget()
 	return S_OK;
 }
 
+HRESULT DestroySecondaryRenderTarget()
+{
+  m_pSecondaryDepthSurface->Release();
+  m_pSecondaryColorSurface->Release();
+  m_pSecondaryTexture->Release();
+
+  return S_OK;
+}
 
 HRESULT SetShader( LPDIRECT3DDEVICE9 pd3dDevice )
 {
@@ -211,9 +219,9 @@ void RenderSecondary(LPDIRECT3DSURFACE9 m_pBackBuffer, LPDIRECT3DSURFACE9 m_pDep
 	};
 	VERTEX v[4];
 	v[0].p = D3DXVECTOR4(   0 - 0.5f,   0 - 0.5f, 0, 1 );  v[0].tu =   0; v[0].tv =   0;
-	v[1].p = D3DXVECTOR4( 640 - 0.5f,   0 - 0.5f, 0, 1 );  v[1].tu = 640; v[1].tv =   0;
-	v[2].p = D3DXVECTOR4( 640 - 0.5f, 480 - 0.5f, 0, 1 );  v[2].tu = 640; v[2].tv = 480;
-	v[3].p = D3DXVECTOR4(   0 - 0.5f, 480 - 0.5f, 0, 1 );  v[3].tu =   0; v[3].tv = 480;
+	v[1].p = D3DXVECTOR4( 640 - 0.5f,   0 - 0.5f, 0, 1 );  v[1].tu = 1; v[1].tv =   0;
+	v[2].p = D3DXVECTOR4( 640 - 0.5f, 480 - 0.5f, 0, 1 );  v[2].tu = 1; v[2].tv = 1;
+	v[3].p = D3DXVECTOR4(   0 - 0.5f, 480 - 0.5f, 0, 1 );  v[3].tu =   0; v[3].tv = 1;
 	m_pd3dDevice->SetFVF( D3DFVF_XYZRHW|D3DFVF_TEX1);
 
 	m_pd3dDevice->SetTexture( 0, m_pSecondaryTexture );
@@ -251,10 +259,10 @@ void RenderSecondary(LPDIRECT3DSURFACE9 m_pBackBuffer, LPDIRECT3DSURFACE9 m_pDep
 	g_pd3dDevice->SetRenderState( D3DRS_DESTBLEND, D3DBLEND_ONE );
 	for(int i=step;i>0;i=i-7)
 	{
-		v[0].tu =   0+i; v[0].tv =   0+i;
-		v[1].tu = 640-i; v[1].tv =   0+i;
-		v[2].tu = 640-i; v[2].tv = 480-i/3;
-		v[3].tu =   0+i; v[3].tv = 480-i/3;
+		v[0].tu = (  0+i)/640.0; v[0].tv = (  0+i)/480.0;
+		v[1].tu = (640-i)/640.0; v[1].tv = (  0+i)/480.0;
+		v[2].tu = (640-i)/640.0; v[2].tv = (480-i/3)/480.0;
+		v[3].tu = (  0+i)/640.0; v[3].tv = (480-i/3)/480.0;
 
 		m_pd3dDevice->SetRenderState( D3DRS_TEXTUREFACTOR, (i/8+3)<<24);
 		WRAP(m_pd3dDevice->DrawPrimitiveUP( D3DPT_TRIANGLEFAN, 2, v, 6*sizeof(FLOAT) ));

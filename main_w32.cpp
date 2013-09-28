@@ -34,6 +34,9 @@ LRESULT WINAPI WndProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
   return DefWindowProc( hWnd, msg, wParam, lParam );
 }
 
+LPDIRECT3DTEXTURE9       g_pPreviousBackBuffer;
+LPDIRECT3DSURFACE9       g_pPreviousBackBufferSurface;
+
 HRESULT InitD3D( unsigned int xres, unsigned int yres, bool fullscreen )
 {
   WNDCLASSEX wc = {
@@ -130,6 +133,9 @@ HRESULT InitD3D( unsigned int xres, unsigned int yres, bool fullscreen )
   g_pd3dDevice->Clear( 0L, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER|D3DCLEAR_STENCIL, 0xff000000, 1.0f, 0L );
   RenderSecondary(main_back, main_depth);
 
+  g_pd3dDevice->CreateTexture( xres, yres, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &g_pPreviousBackBuffer, NULL);
+  g_pPreviousBackBuffer->GetSurfaceLevel(0,&g_pPreviousBackBufferSurface);
+
   ShowWindow(hwnd,SW_SHOW);
   SetForegroundWindow(hwnd);
 
@@ -155,6 +161,7 @@ int WINAPI WinMain( __in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, 
   BASS_Start();
   BASS_ChannelSetPosition( hStream, BASS_ChannelSeconds2Bytes(hStream,fStartSec), BASS_POS_BYTE);
   BASS_ChannelPlay( hStream, FALSE );
+  int nFrame = 0;
   while( !closing )
   {
     MSG msg;        
@@ -167,12 +174,23 @@ int WINAPI WinMain( __in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, 
     float t = BASS_ChannelBytes2Seconds( hStream, BASS_ChannelGetPosition( hStream, BASS_POS_BYTE ) );
     
     g_pd3dDevice->Clear( 0L, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER|D3DCLEAR_STENCIL, 0xff000000, 1.0f, 0L );
+    if (nFrame > 0)
+      g_pd3dDevice->StretchRect( g_pPreviousBackBufferSurface, NULL, main_back, NULL, D3DTEXF_LINEAR );
+
     demo_render( t );
+    g_pd3dDevice->StretchRect( main_back, NULL, g_pPreviousBackBufferSurface, NULL, D3DTEXF_LINEAR );
     g_pd3dDevice->Present( NULL, NULL, NULL, NULL );
+
+    nFrame++;
   }
 
   BASS_Stop();
   BASS_Free();
+
+  DestroySecondaryRenderTarget();
+
+  g_pPreviousBackBufferSurface->Release();
+  g_pPreviousBackBuffer->Release();
 
   demo_deinit();
 

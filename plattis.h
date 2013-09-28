@@ -57,6 +57,8 @@ extern float angles[256];
 extern LPDIRECT3DDEVICE9       g_pd3dDevice;
 
 extern HRESULT CreateSecondaryRenderTarget();
+extern HRESULT DestroySecondaryRenderTarget();
+
 extern void SetSecondaryRenderTarget();
 extern void RenderSecondary(LPDIRECT3DSURFACE9 m_pBackBuffer, LPDIRECT3DSURFACE9 m_pDepthBuffer, int blend=0);
 

@@ -100,7 +100,7 @@ void mosaic_init()
 
 	delete p;
 	//WRAP(cube.Create("media\\noppa-96faces-ok.xbg"));
-  D3DXCreateBox( g_pd3dDevice, 1, 1, 1, &cube, NULL );
+  D3DXCreateBox( g_pd3dDevice, 2, 2, 2, &cube, NULL );
 }
 
 void mosaic_deinit()
