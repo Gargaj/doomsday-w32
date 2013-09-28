@@ -120,13 +120,13 @@ void BlurSecondary()
 // Name: CreateSecondaryRenderTarget()
 // Desc: Creates a texture and depth buffer to render into
 //-----------------------------------------------------------------------------
-HRESULT CreateSecondaryRenderTarget()
+HRESULT CreateSecondaryRenderTarget( unsigned int dwWidth, unsigned int dwHeight)
 {
 #ifndef ENABLE_POSTPROCESSING
   return S_OK;
 #endif
-	DWORD dwWidth  = 640;
-	DWORD dwHeight = 480;
+// 	DWORD dwWidth  = 640;
+// 	DWORD dwHeight = 480;
 
   g_pd3dDevice->CreateTexture( dwWidth, dwHeight, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &m_pSecondaryTexture, NULL);
   m_pSecondaryTexture->GetSurfaceLevel(0,&m_pSecondaryColorSurface);

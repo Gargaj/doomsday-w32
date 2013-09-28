@@ -15,7 +15,7 @@
 #ifdef _DEBUG
     #pragma comment(lib, "d3dx9d.lib")
 #else
-    #pragma comment(lib, "d3dx8.lib")
+    #pragma comment(lib, "d3dx9.lib")
 #endif
 
 #endif
@@ -56,7 +56,7 @@ extern float angles[256];
 
 extern LPDIRECT3DDEVICE9       g_pd3dDevice;
 
-extern HRESULT CreateSecondaryRenderTarget();
+extern HRESULT CreateSecondaryRenderTarget( unsigned int dwWidth, unsigned int dwHeight);
 extern HRESULT DestroySecondaryRenderTarget();
 
 extern void SetSecondaryRenderTarget();

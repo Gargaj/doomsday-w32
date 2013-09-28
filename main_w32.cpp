@@ -4,6 +4,7 @@
 #pragma comment(lib,"bass.lib")
 
 #include "basswma.h"
+#include "fwzSetup.h"
 #pragma comment(lib,"basswma.lib")
 
 float angles[256];
@@ -125,7 +126,7 @@ HRESULT InitD3D( unsigned int xres, unsigned int yres, bool fullscreen )
   g_pd3dDevice->Present( NULL, NULL, NULL, NULL );
   g_pd3dDevice->Clear( 0L, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER|D3DCLEAR_STENCIL, 0xff000000, 1.0f, 0L );
 
-  WRAP(CreateSecondaryRenderTarget());
+  WRAP(CreateSecondaryRenderTarget( xres, yres ));
 
   SetSecondaryRenderTarget();
   g_pd3dDevice->Clear( 0L, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER|D3DCLEAR_STENCIL, 0xff000000, 1.0f, 0L );
@@ -135,6 +136,9 @@ HRESULT InitD3D( unsigned int xres, unsigned int yres, bool fullscreen )
 
   g_pd3dDevice->CreateTexture( xres, yres, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &g_pPreviousBackBuffer, NULL);
   g_pPreviousBackBuffer->GetSurfaceLevel(0,&g_pPreviousBackBufferSurface);
+
+  if (fullscreen)
+    ShowCursor(false);
 
   ShowWindow(hwnd,SW_SHOW);
   SetForegroundWindow(hwnd);
@@ -150,7 +154,27 @@ void ShutdownD3D()
 }
 int WINAPI WinMain( __in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, __in LPSTR lpCmdLine, __in int nShowCmd )
 {
-  InitD3D( 640, 480, false );
+
+  fwzSettings setup;
+
+  setup.hInstance = hInstance;
+  //   setup.nAlwaysOnTop = 0;
+  //   setup.nMultisample = 0;
+  //   setup.nVsync = 1;
+  setup.scrBPP = 32;
+#ifdef _DEBUG
+  setup.nWindowed = 1;
+  setup.scrWidth  = 640;
+  setup.scrHeight = 480;
+#else
+  setup.scrWidth  = 1024;
+  setup.scrHeight = 768;
+  setup.nWindowed = 0;
+  if (!OpenSetupDialog(&setup)) return -1;
+#endif
+
+
+  InitD3D( setup.scrWidth, setup.scrHeight, !setup.nWindowed );
 
   BASS_Init(-1,44100,NULL,hwnd,NULL);
   HSTREAM hStream = BASS_WMA_StreamCreateFile(FALSE,"media\\demo.wma",0,0,0);
