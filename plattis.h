@@ -53,6 +53,11 @@ void meta_render(float t);
 
 extern float angles[256];
 
+extern unsigned int dwWidth;
+extern unsigned int dwHeight;
+#define SX(x) ((x)*dwWidth /640.0)
+#define SY(x) ((x)*dwHeight/480.0)
+
 
 extern LPDIRECT3DDEVICE9       g_pd3dDevice;
 

@@ -15,6 +15,9 @@ LPDIRECT3DSURFACE9 main_depth;
 LPDIRECT3D9 d3d = NULL;
 LPDIRECT3DDEVICE9 g_pd3dDevice = NULL; // Our rendering device
 
+unsigned int dwWidth = 0;
+unsigned int dwHeight = 0;
+
 LRESULT WINAPI WndProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
   if (msg==WM_CLOSE)
@@ -78,6 +81,9 @@ HRESULT InitD3D( unsigned int xres, unsigned int yres, bool fullscreen )
   hwnd = CreateWindowEx( 0,"dsd", "doomsday w32 2013",
     dwStyle, rc.left, rc.top, rc.right-rc.left, rc.bottom-rc.top,
     NULL, NULL, wc.hInstance, NULL );
+
+  dwWidth = xres;
+  dwHeight = yres;
 
   if( NULL == ( d3d = Direct3DCreate9( D3D_SDK_VERSION ) ) )
     return E_FAIL;
@@ -164,8 +170,8 @@ int WINAPI WinMain( __in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, 
   setup.scrBPP = 32;
 #ifdef _DEBUG
   setup.nWindowed = 1;
-  setup.scrWidth  = 640;
-  setup.scrHeight = 480;
+  setup.scrWidth  = 800;
+  setup.scrHeight = 600;
 #else
   setup.scrWidth  = 1024;
   setup.scrHeight = 768;

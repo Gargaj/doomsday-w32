@@ -63,10 +63,10 @@ void slides_render(float t)
     struct VERTEX { D3DXVECTOR4 p; FLOAT tu, tv; 
 	};
     VERTEX v[4];
-    v[0].p = D3DXVECTOR4(   0 - 0.5f,  48 - 0.5f, 0, 1 );  v[0].tu =   0; v[0].tv =   0;
-    v[1].p = D3DXVECTOR4( 640 - 0.5f,  48 - 0.5f, 0, 1 );  v[1].tu = 1; v[1].tv =   0;
-    v[2].p = D3DXVECTOR4( 640 - 0.5f, 432 - 0.5f, 0, 1 );  v[2].tu = 1; v[2].tv =1;
-    v[3].p = D3DXVECTOR4(   0 - 0.5f, 432 - 0.5f, 0, 1 );  v[3].tu =   0; v[3].tv = 1;
+    v[0].p = D3DXVECTOR4( SX(  0) - 0.5f, SY( 48) - 0.5f, 0, 1 );  v[0].tu =   0; v[0].tv =   0;
+    v[1].p = D3DXVECTOR4( SX(640) - 0.5f, SY( 48) - 0.5f, 0, 1 );  v[1].tu = 1; v[1].tv =   0;
+    v[2].p = D3DXVECTOR4( SX(640) - 0.5f, SY(432) - 0.5f, 0, 1 );  v[2].tu = 1; v[2].tv =1;
+    v[3].p = D3DXVECTOR4( SX(  0) - 0.5f, SY(432) - 0.5f, 0, 1 );  v[3].tu =   0; v[3].tv = 1;
 	m_pd3dDevice->SetFVF( D3DFVF_XYZRHW|D3DFVF_TEX1);
 
     m_pd3dDevice->SetTexture( 0, slides_tex );
