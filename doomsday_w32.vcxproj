@@ -73,6 +73,7 @@
     <ClCompile Include="demo.cpp" />
     <ClCompile Include="hienot.cpp" />
     <ClCompile Include="ifspoints.cpp" />
+    <ClCompile Include="main_w32.cpp" />
     <ClCompile Include="mat3x3.c" />
     <ClCompile Include="Misc.cpp" />
     <ClCompile Include="mosaic.cpp" />
@@ -81,7 +82,6 @@
     <ClCompile Include="slides.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="System2.cpp" />
-    <ClCompile Include="xboxdemo.cpp" />
     <ClCompile Include="zoomer.cpp" />
   </ItemGroup>
   <ItemGroup>

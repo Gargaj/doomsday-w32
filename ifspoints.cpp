@@ -131,7 +131,7 @@ void render_bg(LPDIRECT3DDEVICE9 pd3dDevice, LPDIRECT3DTEXTURE9 bg)
     v[2].tu = 640-i; v[2].tv = 480-i;
     v[3].tu =   0+i; v[3].tv = 480-i;
 */
-    WRAP(pd3dDevice->DrawPrimitiveUP( D3DPT_QUADLIST, 1, v, 6*sizeof(FLOAT) ));
+    WRAP(pd3dDevice->DrawPrimitiveUP( D3DPT_TRIANGLEFAN, 1, v, 6*sizeof(FLOAT) ));
 
 	pd3dDevice->SetRenderState( D3DRS_TEXTUREFACTOR, -1);
 
@@ -173,7 +173,7 @@ void ifs_clear()
 	g_pd3dDevice->SetRenderState( D3DRS_SRCBLEND, D3DBLEND_SRCALPHA );
 	g_pd3dDevice->SetRenderState( D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA );
 
-    WRAP(m_pd3dDevice->DrawPrimitiveUP( D3DPT_QUADLIST, 1, v, 6*sizeof(FLOAT) ));
+    WRAP(m_pd3dDevice->DrawPrimitiveUP( D3DPT_TRIANGLEFAN, 1, v, 6*sizeof(FLOAT) ));
     m_pd3dDevice->SetRenderState( D3DRS_ALPHABLENDENABLE, FALSE);
 }
 

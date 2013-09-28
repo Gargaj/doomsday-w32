@@ -120,6 +120,8 @@ void BlurSecondary()
 //-----------------------------------------------------------------------------
 HRESULT CreateSecondaryRenderTarget()
 {
+  return S_OK;
+
 	DWORD dwWidth  = 640;
 	DWORD dwHeight = 480;
 
@@ -173,6 +175,7 @@ HRESULT SetShader( LPDIRECT3DDEVICE9 pd3dDevice )
 
 void SetSecondaryRenderTarget()
 {
+  return;
 	m_pd3dDevice->SetRenderTarget( 0, m_pSecondaryColorSurface );
   m_pd3dDevice->SetDepthStencilSurface( m_pSecondaryDepthSurface );
 }
@@ -186,6 +189,7 @@ void SecondaryBlend(int a)
 // to render the texture to the primary backbuffer.
 void RenderSecondary(LPDIRECT3DSURFACE9 m_pBackBuffer, LPDIRECT3DSURFACE9 m_pDepthBuffer, int blend)
 {
+  return;
 	// Set the render target back to be the app's main backbuffer
   m_pd3dDevice->SetRenderTarget( 0, m_pBackBuffer );
   m_pd3dDevice->SetDepthStencilSurface( m_pDepthBuffer );
@@ -230,7 +234,7 @@ void RenderSecondary(LPDIRECT3DSURFACE9 m_pBackBuffer, LPDIRECT3DSURFACE9 m_pDep
 */
 	m_pd3dDevice->SetRenderState( D3DRS_TEXTUREFACTOR, ((int)(mb*255))<<24);
 	g_pd3dDevice->SetRenderState( D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA );
-	WRAP(m_pd3dDevice->DrawPrimitiveUP( D3DPT_QUADLIST, 1, v, 6*sizeof(FLOAT) ));
+	WRAP(m_pd3dDevice->DrawPrimitiveUP( D3DPT_TRIANGLEFAN, 1, v, 6*sizeof(FLOAT) ));
 
 	g_pd3dDevice->SetRenderState( D3DRS_DESTBLEND, D3DBLEND_ONE );
 	for(int i=step;i>0;i=i-7)
@@ -241,7 +245,7 @@ void RenderSecondary(LPDIRECT3DSURFACE9 m_pBackBuffer, LPDIRECT3DSURFACE9 m_pDep
 		v[3].tu =   0+i; v[3].tv = 480-i/3;
 
 		m_pd3dDevice->SetRenderState( D3DRS_TEXTUREFACTOR, (i/8+3)<<24);
-		WRAP(m_pd3dDevice->DrawPrimitiveUP( D3DPT_QUADLIST, 1, v, 6*sizeof(FLOAT) ));
+		WRAP(m_pd3dDevice->DrawPrimitiveUP( D3DPT_TRIANGLEFAN, 1, v, 6*sizeof(FLOAT) ));
 	}
 
 	m_pd3dDevice->SetPixelShader(NULL);

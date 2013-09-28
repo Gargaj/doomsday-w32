@@ -89,7 +89,7 @@ void slides_render(float t)
     m_pd3dDevice->SetRenderState( D3DRS_ALPHABLENDENABLE, FALSE);
 
 	if(slides_tex)
-	    WRAP(m_pd3dDevice->DrawPrimitiveUP( D3DPT_QUADLIST, 1, v, 6*sizeof(FLOAT) ));
+	    WRAP(m_pd3dDevice->DrawPrimitiveUP( D3DPT_TRIANGLEFAN, 1, v, 6*sizeof(FLOAT) ));
 
     m_pd3dDevice->SetRenderState( D3DRS_ALPHABLENDENABLE, FALSE);
     m_pd3dDevice->SetTexture( 0, NULL );
@@ -152,7 +152,7 @@ void scroll_render(float t)
 	g_pd3dDevice->SetRenderState( D3DRS_DESTBLEND, D3DBLEND_ZERO );
     m_pd3dDevice->SetRenderState( D3DRS_ALPHABLENDENABLE, FALSE);
 
-    WRAP(m_pd3dDevice->DrawPrimitiveUP( D3DPT_QUADLIST, 1, v, 6*sizeof(FLOAT) ));
+    WRAP(m_pd3dDevice->DrawPrimitiveUP( D3DPT_TRIANGLEFAN, 1, v, 6*sizeof(FLOAT) ));
 
     m_pd3dDevice->SetRenderState( D3DRS_ALPHABLENDENABLE, FALSE);
     m_pd3dDevice->SetTexture( 0, NULL );
