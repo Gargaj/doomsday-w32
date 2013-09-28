@@ -232,14 +232,15 @@ void mosaic_render(float t)
 
 void mosaic_text()
 {
+  m_pd3dDevice->BeginScene();
 	// Render the secondary color surface to the screen
 	struct VERTEX { D3DXVECTOR4 p; FLOAT tu, tv; 
 	};
 	VERTEX v[4];
-	v[0].p = D3DXVECTOR4( 480 - 0.5f, 378 - 0.5f, 0, 0 );  v[0].tu =   0; v[0].tv =   0;
-	v[1].p = D3DXVECTOR4( 600 - 0.5f, 378 - 0.5f, 0, 0 );  v[1].tu = 1; v[1].tv =   0;
-	v[2].p = D3DXVECTOR4( 600 - 0.5f, 438 - 0.5f, 0, 0 );  v[2].tu = 1; v[2].tv = 1;
-	v[3].p = D3DXVECTOR4( 480 - 0.5f, 438 - 0.5f, 0, 0 );  v[3].tu =   0; v[3].tv = 1;
+	v[0].p = D3DXVECTOR4( 480 - 0.5f, 378 - 0.5f, 0, 1 );  v[0].tu =   0; v[0].tv =   0;
+	v[1].p = D3DXVECTOR4( 600 - 0.5f, 378 - 0.5f, 0, 1 );  v[1].tu = 1; v[1].tv =   0;
+	v[2].p = D3DXVECTOR4( 600 - 0.5f, 438 - 0.5f, 0, 1 );  v[2].tu = 1; v[2].tv = 1;
+	v[3].p = D3DXVECTOR4( 480 - 0.5f, 438 - 0.5f, 0, 1 );  v[3].tu =   0; v[3].tv = 1;
 	m_pd3dDevice->SetFVF( D3DFVF_XYZRHW|D3DFVF_TEX1);
 
 	m_pd3dDevice->SetTexture( 0, tex_rip);
@@ -265,4 +266,5 @@ void mosaic_text()
 	g_pd3dDevice->SetRenderState( D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA );
 
 	WRAP(m_pd3dDevice->DrawPrimitiveUP( D3DPT_TRIANGLEFAN, 2, v, 6*sizeof(FLOAT) ));
+  m_pd3dDevice->EndScene();
 }
