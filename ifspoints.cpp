@@ -258,11 +258,11 @@ void ifs_render(float t)
 	// Set the render states for using point sprites
 	g_pd3dDevice->SetRenderState( D3DRS_POINTSPRITEENABLE, TRUE);
 	g_pd3dDevice->SetRenderState( D3DRS_POINTSCALEENABLE,  FALSE );
-	g_pd3dDevice->SetRenderState( D3DRS_POINTSIZE,     FtoDW(8.0f) );
-	g_pd3dDevice->SetRenderState( D3DRS_POINTSIZE_MIN, FtoDW(0.01f) );
-	g_pd3dDevice->SetRenderState( D3DRS_POINTSCALE_A,  FtoDW(0.00f) );
-	g_pd3dDevice->SetRenderState( D3DRS_POINTSCALE_B,  FtoDW(0.00f) );
-	g_pd3dDevice->SetRenderState( D3DRS_POINTSCALE_C,  FtoDW(1.00f) );
+	g_pd3dDevice->SetRenderState( D3DRS_POINTSIZE,     FtoDW(SX(8.0f)) );
+	g_pd3dDevice->SetRenderState( D3DRS_POINTSIZE_MIN, FtoDW(SX(0.01f)) );
+	g_pd3dDevice->SetRenderState( D3DRS_POINTSCALE_A,  FtoDW(SX(0.00f)) );
+	g_pd3dDevice->SetRenderState( D3DRS_POINTSCALE_B,  FtoDW(SX(0.00f)) );
+	g_pd3dDevice->SetRenderState( D3DRS_POINTSCALE_C,  FtoDW(SX(1.00f)) );
 
 
 	// Set up the vertex buffer to be rendered
